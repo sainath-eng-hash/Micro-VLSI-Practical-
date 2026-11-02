@@ -1,0 +1,70 @@
+1.Verilog Code
+
+
+
+
+module up_down_counter(
+    input clk,
+    input reset,
+    input up_down,
+    output reg [2:0] count
+);
+
+always @(posedge clk)
+begin
+    if(reset)
+        count <= 3'b000;
+    else if(up_down)
+        count <= count + 1'b1;
+    else
+        count <= count - 1'b1;
+end
+
+endmodule
+
+
+
+2.Test Bench 
+
+
+
+module up_down_counter_tb;
+
+reg clk, reset, up_down;
+wire [2:0] count;
+
+up_down_counter DUT(
+    .clk(clk),
+    .reset(reset),
+    .up_down(up_down),
+    .count(count)
+);
+
+always #5 clk = ~clk;
+
+initial begin
+
+    clk = 0;
+    reset = 1;
+    up_down = 1;
+
+    #10 reset = 0;
+
+    // Up Counting
+    up_down = 1;
+    #80;
+
+    // Down Counting
+    up_down = 0;
+    #80;
+
+    $stop;
+
+end
+
+initial begin
+    $monitor("Time=%0t Up_Down=%b Count=%b",
+              $time, up_down, count);
+end
+
+endmodule

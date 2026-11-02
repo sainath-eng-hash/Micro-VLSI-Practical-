@@ -1,0 +1,64 @@
+1.Verilog Code
+
+
+module d_flipflop(
+    input D,
+    input clk,
+    input reset,
+    output reg Q
+);
+
+always @(posedge clk)
+begin
+    if(reset)
+        Q <= 1'b0;
+    else
+        Q <= D;
+end
+
+endmodule
+
+
+
+
+2.Test Bench 
+
+
+module d_flipflop_tb;
+
+reg D, clk, reset;
+wire Q;
+
+d_flipflop DUT(
+    .D(D),
+    .clk(clk),
+    .reset(reset),
+    .Q(Q)
+);
+
+always #5 clk = ~clk;
+
+initial begin
+
+    clk = 0;
+    reset = 1;
+    D = 0;
+
+    #10 reset = 0;
+
+    D = 1; #10;
+    D = 0; #10;
+    D = 1; #10;
+    D = 1; #10;
+    D = 0; #10;
+
+    $stop;
+
+end
+
+initial begin
+    $monitor("Time=%0t D=%b Q=%b",
+              $time, D, Q);
+end
+
+endmodule

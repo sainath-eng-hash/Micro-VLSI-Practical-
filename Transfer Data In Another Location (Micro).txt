@@ -1,0 +1,31 @@
+// 1.Internal RAM to internal RAM
+
+        ORG 0000H
+        MOV R0, #30H      ; source address
+        MOV R1, #40H      ; destination address
+        MOV R2, #05H      ; count = 5 bytes
+AGAIN:  MOV A, @R0        ; get byte from source
+        MOV @R1, A        ; store at destination
+        INC R0
+        INC R1
+        DJNZ R2, AGAIN    ; repeat until R2 = 0
+HERE:   SJMP HERE
+        END
+
+
+// 2. Internal RAM to external RAM 
+
+
+        ORG 0000H
+        MOV R0, #40H      ; source (internal)
+        MOV DPTR, #2000H  ; destination (external)
+        MOV R2, #05H
+AGAIN:  MOV A, @R0
+        MOVX @DPTR, A     ; MOVX is needed for external memory
+        INC R0
+        INC DPTR
+        DJNZ R2, AGAIN
+HERE:   SJMP HERE
+        END 
+
+
